@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日英语 - 2026年4月13日</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header .date {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .header .theme {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+        .sentence {
+            font-size: 20px;
+            color: #333;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .phonetic {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .meaning {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .dialogue {
+            background: #f0f4ff;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .dialogue-title {
+            font-size: 13px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .dialogue-line {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .dialogue-line .speaker {
+            font-weight: 600;
+            color: #667eea;
+        }
+        .tip {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #2d3436;
+        }
+        .tip::before {
+            content: "💡 ";
+        }
+        .play-btn {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            transition: transform 0.2s;
+        }
+        .play-btn:hover {
+            transform: scale(1.05);
+        }
+        .play-btn:active {
+            transform: scale(0.95);
+        }
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 每日 5 句实用英语</h1>
+            <div class="date">2026年4月13日 · 周一</div>
+            <div class="theme">🎯 本周主题：接待外国访客</div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+
+        <!-- Sentence 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="number">1</div>
+            </div>
+            <div class="sentence">"Welcome to our company. Did you have a good trip?"</div>
+            <div class="phonetic">/ˈwelkəm tuː ˈaʊər ˈkʌmpəni. dɪd juː hæv ə ɡʊd trɪp?/</div>
+            <div class="meaning">欢迎来到我们公司，旅途还顺利吗？</div>
+            <div class="dialogue">
+                <div class="dialogue-title">场景对话 · 机场迎接</div>
+                <div class="dialogue-line"><span class="speaker">You:</span> Hi, you must be John from ABC Corp. Welcome to our company. Did you have a good trip?</div>
+                <div class="dialogue-line"><span class="speaker">John:</span> Yes, thank you. The flight was smooth.</div>
+            </div>
+            <div class="tip">记忆小贴士：trip 是「旅途」，good trip 就是「旅途愉快」。这句话是接待访客的开场白，既礼貌又贴心！</div>
+            <button class="play-btn" onclick="speak('Welcome to our company. Did you have a good trip?')">
+                🔊 朗读
+            </button>
+        </div>
+
+        <!-- Sentence 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="number">2</div>
+            </div>
+            <div class="sentence">"Let me get you a cup of coffee or tea."</div>
+            <div class="phonetic">/let miː ɡet juː ə kʌp əv ˈkɒfi ɔː tiː/</div>
+            <div class="meaning">让我给你倒杯咖啡或茶吧。</div>
+            <div class="dialogue">
+                <div class="dialogue-title">场景对话 · 接待室</div>
+                <div class="dialogue-line"><span class="speaker">You:</span> Please have a seat. Let me get you a cup of coffee or tea.</div>
+                <div class="dialogue-line"><span class="speaker">Guest:</span> Coffee would be great, thank you.</div>
+            </div>
+            <div class="tip">记忆小贴士：get 在这里不是「得到」，而是「拿/倒」的意思。用 Let me... 开头特别客气，是招待客人的必备句！</div>
+            <button class="play-btn" onclick="speak('Let me get you a cup of coffee or tea.')">
+                🔊 朗读
+            </button>
+        </div>
+
+        <!-- Sentence 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="number">3</div>
+            </div>
+            <div class="sentence">"This way, please. I'll show you around."</div>
+            <div class="phonetic">/ðɪs weɪ pliːz. aɪl ʃəʊ juː əˈraʊnd/</div>
+            <div class="meaning">请这边走，我带您参观一下。</div>
+            <div class="dialogue">
+                <div class="dialogue-title">场景对话 · 参观公司</div>
+                <div class="dialogue-line"><span class="speaker">You:</span> This way, please. I'll show you around our office.</div>
+                <div class="dialogue-line"><span class="speaker">Guest:</span> Wonderful, I'd love to see your workspace.</div>
+            </div>
+            <div class="tip">记忆小贴士：show around = 带人参观。This way, please 是引导方向的礼貌说法，配合手势更自然！</div>
+            <button class="play-btn" onclick="speak('This way, please. I will show you around.')">
+                🔊 朗读
+            </button>
+        </div>
+
+        <!-- Sentence 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="number">4</div>
+            </div>
+            <div class="sentence">"Please help yourself to some refreshments."</div>
+            <div class="phonetic">/pliːz help jɔːself tə sʌm rɪˈfreʃmənts/</div>
+            <div class="meaning">请随意享用点心饮料。</div>
+            <div class="dialogue">
+                <div class="dialogue-title">场景对话 · 会议茶歇</div>
+                <div class="dialogue-line"><span class="speaker">You:</span> We have some snacks and drinks here. Please help yourself to some refreshments.</div>
+                <div class="dialogue-line"><span class="speaker">Guest:</span> Thank you, everything looks delicious.</div>
+            </div>
+            <div class="tip">记忆小贴士：help yourself = 请自便/随意拿。refreshments 是「茶点饮料」的统称，比说 food and drinks 更正式、更地道！</div>
+            <button class="play-btn" onclick="speak('Please help yourself to some refreshments.')">
+                🔊 朗读
+            </button>
+        </div>
+
+        <!-- Sentence 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="number">5</div>
+            </div>
+            <div class="sentence">"It was a pleasure meeting you. Safe travels!"</div>
+            <div class="phonetic">/ɪt wɒz ə ˈpleʒə ˈmiːtɪŋ juː. seɪf ˈtrævəlz/</div>
+            <div class="meaning">很高兴见到您，一路平安！</div>
+            <div class="dialogue">
+                <div class="dialogue-title">场景对话 · 送别</div>
+                <div class="dialogue-line"><span class="speaker">You:</span> Thank you for visiting us today. It was a pleasure meeting you. Safe travels!</div>
+                <div class="dialogue-line"><span class="speaker">Guest:</span> Thank you for your hospitality. I look forward to our next meeting.</div>
+            </div>
+            <div class="tip">记忆小贴士：Safe travels 是送别时的经典祝福，比 bye bye 正式得多。hospitality = 热情款待，客人可能会用这个词夸你哦！</div>
+            <button class="play-btn" onclick="speak('It was a pleasure meeting you. Safe travels!')">
+                🔊 朗读
+            </button>
+        </div>
+
+        <div class="footer">
+            <p>🌟 每天进步一点点 · 明日 08:40 继续推送</p>
+        </div>
+    </div>
+
+    <script>
+        let playedCount = 0;
+        const totalCards = 5;
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                
+                // Try to use a good English voice
+                const voices = window.speechSynthesis.getVoices();
+                const englishVoice = voices.find(voice => 
+                    voice.lang.includes('en') && (voice.name.includes('Google') || voice.name.includes('Samantha'))
+                ) || voices.find(voice => voice.lang.includes('en'));
+                
+                if (englishVoice) {
+                    utterance.voice = englishVoice;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+                
+                // Update progress
+                playedCount++;
+                updateProgress();
+            } else {
+                alert('您的浏览器不支持语音朗读功能，请使用 Chrome、Edge 或 Safari 浏览器。');
+            }
+        }
+
+        function updateProgress() {
+            const percentage = (playedCount / totalCards) * 100;
+            document.getElementById('progress').style.width = percentage + '%';
+        }
+
+        // Load voices when available
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = function() {
+                // Voices loaded
+            };
+        }
+    </script>
+</body>
+</html>
