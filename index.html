@@ -3,320 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>每日英语 - 2026年4月15日</title>
+    <title>每日英语 · 职场沟通汇报篇</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        .header .date {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-        .header .theme {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 8px 20px;
-            border-radius: 20px;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .number {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-            margin-right: 12px;
-        }
-        .sentence {
-            font-size: 20px;
-            color: #333;
-            font-weight: 600;
-            line-height: 1.5;
-            margin-bottom: 12px;
-        }
-        .phonetic {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-        .meaning {
-            color: #555;
-            font-size: 15px;
-            margin-bottom: 16px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-        .dialogue {
-            background: #f0f4ff;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-        }
-        .dialogue-title {
-            font-size: 13px;
-            color: #667eea;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-        .dialogue-line {
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .dialogue-line .speaker {
-            font-weight: 600;
-            color: #667eea;
-        }
-        .tip {
-            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            color: #2d3436;
-        }
-        .tip::before {
-            content: "💡 ";
-        }
-        .play-btn {
-            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-            transition: transform 0.2s;
-        }
-        .play-btn:hover {
-            transform: scale(1.05);
-        }
-        .play-btn:active {
-            transform: scale(0.95);
-        }
-        .footer {
-            text-align: center;
-            color: white;
-            opacity: 0.8;
-            margin-top: 30px;
-            font-size: 14px;
-        }
-        .progress-bar {
-            background: rgba(255,255,255,0.3);
-            height: 6px;
-            border-radius: 3px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            background: white;
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { font-size: 20px; color: #333; margin-bottom: 5px; }
+        .header .date { font-size: 14px; color: #888; }
+        .card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card-title { font-size: 14px; color: #ff6b9d; font-weight: bold; margin-bottom: 12px; }
+        .sentence { font-size: 18px; color: #333; margin-bottom: 10px; line-height: 1.6; }
+        .meaning { font-size: 14px; color: #666; margin-bottom: 8px; padding-left: 12px; border-left: 3px solid #ff6b9d; }
+        .phonetic { font-size: 13px; color: #999; margin-bottom: 12px; }
+        .dialogue { background: #f8f9fa; border-radius: 8px; padding: 14px; margin-bottom: 12px; font-size: 14px; line-height: 1.7; }
+        .dialogue .speaker-a { color: #ff6b9d; }
+        .dialogue .speaker-b { color: #4a90d9; }
+        .tip { font-size: 13px; color: #666; background: #fff8f0; padding: 12px; border-radius: 8px; border-left: 3px solid #ffa500; }
+        .tip::before { content: '💡 '; }
+        .speak-btn { background: linear-gradient(135deg, #ff6b9d, #ff8a80); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; margin-top: 8px; }
+        .speak-btn:hover { opacity: 0.9; }
+        .footer { text-align: center; margin-top: 20px; color: #aaa; font-size: 12px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📚 每日 5 句实用英语</h1>
-            <div class="date">2026年4月15日 · 周三</div>
-            <div class="theme">🎯 本周主题：职场沟通（第3天：确认）</div>
+            <h1>📚 每日英语</h1>
+            <p class="date">2026年4月16日 · 周四 · 职场沟通汇报篇</p>
         </div>
 
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress"></div>
-        </div>
-
-        <!-- Sentence 1 -->
         <div class="card">
-            <div class="card-header">
-                <div class="number">1</div>
-            </div>
-            <div class="sentence">"Could we confirm the meeting time for tomorrow?"</div>
-            <div class="phonetic">/kʊd wiː kənˈfɜːm ðə ˈmiːtɪŋ taɪm fɔː təˈmɒrəʊ/</div>
-            <div class="meaning">我们可以确认一下明天的会议时间吗？</div>
+            <div class="card-title">📋 第1句</div>
+            <div class="sentence">"Here's an update on the project progress so far."</div>
+            <button class="speak-btn" onclick="speak('Here is an update on the project progress so far.')">🔊 朗读</button>
+            <div class="meaning">词义：这是目前为止项目进展的最新情况。</div>
+            <div class="phonetic">音标：/hɪərz ən ˈʌpdeɪt ɒn ðə ˈprɒdʒekt ˈprəʊɡres səʊ fɑː/</div>
             <div class="dialogue">
-                <div class="dialogue-title">场景对话 · 确认会议安排</div>
-                <div class="dialogue-line"><span class="speaker">You:</span> Hi, this is Amy from ABC Trading. Could we confirm the meeting time for tomorrow?</div>
-                <div class="dialogue-line"><span class="speaker">Client:</span> Yes, it's still at 10 AM. Should we meet at the lobby?</div>
+                <span class="speaker-a">A:</span> Good morning, everyone. Let's start the meeting.<br>
+                <span class="speaker-b">B:</span> Sure. <span class="speaker-a">A:</span> "Here's an update on the project progress so far."
             </div>
-            <div class="tip">记忆小贴士：confirm = 确认。职场必用！会议前、约定前都应确认，避免误会。开头加 "Could we" 更礼貌。</div>
-            <button class="play-btn" onclick="speak('Could we confirm the meeting time for tomorrow?')">
-                🔊 朗读
-            </button>
+            <div class="tip">记忆小贴士：汇报开始时常用 "Here's an update" 引出内容，比直接说 "I want to report..." 更自然专业。</div>
         </div>
 
-        <!-- Sentence 2 -->
         <div class="card">
-            <div class="card-header">
-                <div class="number">2</div>
-            </div>
-            <div class="sentence">"I just wanted to double-check the delivery date with you."</div>
-            <div class="phonetic">/aɪ dʒʌst ˈwɒntɪd tuː ˈdʌbl tʃek ðə ˈdelɪvəri deɪt wɪð juː/</div>
-            <div class="meaning">我想和您再次确认一下交货日期。</div>
+            <div class="card-title">📋 第2句</div>
+            <div class="sentence">"We've completed about 70% of the work, and we're on track to finish by May."</div>
+            <button class="speak-btn" onclick="speak('We have completed about 70 percent of the work, and we are on track to finish by May.')">🔊 朗读</button>
+            <div class="meaning">词义：我们已完成约 70% 的工作，有望在5月前完成。</div>
+            <div class="phonetic">音标：/wiːv kəmˈpliːtɪd əˈbaʊt ˈsevnti pəˈsɛnt ɒv ðə wɜːk ænd wɪər ɒn træk tuː ˈfɪnɪʃ baɪ meɪ/</div>
             <div class="dialogue">
-                <div class="dialogue-title">场景对话 · 确认订单交期</div>
-                <div class="dialogue-line"><span class="speaker">You:</span> Hi Mark, I just wanted to double-check the delivery date with you.</div>
-                <div class="dialogue-line"><span class="speaker">Mark:</span> Sure, it's scheduled for May 15th. Is that still okay for you?</div>
+                <span class="speaker-b">B:</span> "We've completed about 70% of the work, and we're on track to finish by May."<br>
+                <span class="speaker-a">A:</span> Great! That sounds good.
             </div>
-            <div class="tip">记忆小贴士：double-check = 再确认/核对。"just wanted to" 让语气更柔和，不显得咄咄逼人。</div>
-            <button class="play-btn" onclick="speak('I just wanted to double-check the delivery date with you.')">
-                🔊 朗读
-            </button>
+            <div class="tip">记忆小贴士："on track" 是"进度正常"的意思，"off track" 则表示落后于计划。记住这对反义词很有用！</div>
         </div>
 
-        <!-- Sentence 3 -->
         <div class="card">
-            <div class="card-header">
-                <div class="number">3</div>
-            </div>
-            <div class="sentence">"Can I confirm your email address for the quotation?"</div>
-            <div class="phonetic">/ken aɪ kənˈfɜːm jɔː ˈiːmeɪl əˈdres fɔː ðə kwəʊˈteɪʃn/</div>
-            <div class="meaning">我可以确认一下您的邮箱地址，以便发送报价单吗？</div>
+            <div class="card-title">📋 第3句</div>
+            <div class="sentence">"The biggest challenge we're facing is the supply chain delay."</div>
+            <button class="speak-btn" onclick="speak('The biggest challenge we are facing is the supply chain delay.')">🔊 朗读</button>
+            <div class="meaning">词义：我们面临的最大挑战是供应链延迟问题。</div>
+            <div class="phonetic">音标：/ðə ˈbɪɡɪst ˈtʃælɪndʒ wɪə ˈfeɪsɪŋ ɪz ðə səˈplaɪ tʃeɪn dɪˈleɪ/</div>
             <div class="dialogue">
-                <div class="dialogue-title">场景对话 · 确认邮件信息</div>
-                <div class="dialogue-line"><span class="speaker">You:</span> Before I send the quotation, can I confirm your email address?</div>
-                <div class="dialogue-line"><span class="speaker">Client:</span> Yes, it's contact at companyname dot com.</div>
+                <span class="speaker-a">A:</span> "The biggest challenge we're facing is the supply chain delay."<br>
+                <span class="speaker-b">B:</span> Do you have any solutions in mind?
             </div>
-            <div class="tip">记忆小贴士：quotation = 报价单。外贸必备！发报价、合同前必确认邮箱，避免发错地址。</div>
-            <button class="play-btn" onclick="speak('Can I confirm your email address for the quotation?')">
-                🔊 朗读
-            </button>
+            <div class="tip">记忆小贴士：汇报问题时，先说 "biggest challenge"，再说原因，逻辑清晰，外国人很容易 follow。</div>
         </div>
 
-        <!-- Sentence 4 -->
         <div class="card">
-            <div class="card-header">
-                <div class="number">4</div>
-            </div>
-            <div class="sentence">"I want to verify that we've received your payment."</div>
-            <div class="phonetic">/aɪ wɒnt tuː ˈverɪfaɪ ðæt wiːv rɪˈsiːvd jɔː ˈpeɪmənt/</div>
-            <div class="meaning">我想确认一下我们是否收到了您的付款。</div>
+            <div class="card-title">📋 第4句</div>
+            <div class="sentence">"I'd recommend we source from an alternative supplier to avoid further delays."</div>
+            <button class="speak-btn" onclick="speak('I would recommend we source from an alternative supplier to avoid further delays.')">🔊 朗读</button>
+            <div class="meaning">词义：我建议我们从备选供应商处采购，以避免进一步延误。</div>
+            <div class="phonetic">音标：/aɪd ˌrekəˈmɛnd wiː sɔːs frɒm æn ɔːlˈtɜːnətɪv səˈplaɪə tuː əˈvɔɪd ˈfɜːðə dɪˈleɪz/</div>
             <div class="dialogue">
-                <div class="dialogue-title">场景对话 · 确认付款到账</div>
-                <div class="dialogue-line"><span class="speaker">You:</span> Hello, I want to verify that we've received your payment.</div>
-                <div class="dialogue-line"><span class="speaker">Client:</span> Yes, I transferred it this morning. You should have received it.</div>
+                <span class="speaker-b">B:</span> What do you suggest we do?<br>
+                <span class="speaker-a">A:</span> "I'd recommend we source from an alternative supplier."
             </div>
-            <div class="tip">记忆小贴士：verify = 核实/验证。"want to verify" 比 "I need to check" 听起来更专业！</div>
-            <button class="play-btn" onclick="speak('I want to verify that we have received your payment.')">
-                🔊 朗读
-            </button>
+            <div class="tip">记忆小贴士："I'd recommend" 开头显得专业有礼，后面接完整建议句子，外国客户听了会觉得很靠谱！</div>
         </div>
 
-        <!-- Sentence 5 -->
         <div class="card">
-            <div class="card-header">
-                <div class="number">5</div>
-            </div>
-            <div class="sentence">"Let me just confirm the details before we wrap up."</div>
-            <div class="phonetic">/let miː dʒʌst kənˈfɜːm ðə ˈdiːteɪlz bɪˈfɔː wiː ræp ʌp/</div>
-            <div class="meaning">在我们结束之前，让我确认一下细节。</div>
+            <div class="card-title">📋 第5句</div>
+            <div class="sentence">"Please let me know if you have any questions or need more details."</div>
+            <button class="speak-btn" onclick="speak('Please let me know if you have any questions or need more details.')">🔊 朗读</button>
+            <div class="meaning">词义：如有任何问题或需要更多细节，请随时告知我。</div>
+            <div class="phonetic">音标：/pliːz lɛt miː nəʊ ɪf juː hæv ˈeni ˈkwestʃənz ɔː niːd mɔː ˈdiːteɪlz/</div>
             <div class="dialogue">
-                <div class="dialogue-title">场景对话 · 会议结尾总结确认</div>
-                <div class="dialogue-line"><span class="speaker">You:</span> Let me just confirm the details before we wrap up. So we're agreed on the sample date and the final delivery?</div>
-                <div class="dialogue-line"><span class="speaker">Client:</span> Yes, that's correct. Thank you for the clear summary.</div>
+                <span class="speaker-a">A:</span> That's the end of my report. "Please let me know if you have any questions."<br>
+                <span class="speaker-b">B:</span> No questions. Well done!
             </div>
-            <div class="tip">记忆小贴士：wrap up = 结束/收尾。"before we wrap up" 是会议结尾确认的完美开场白！</div>
-            <button class="play-btn" onclick="speak('Let me just confirm the details before we wrap up.')">
-                🔊 朗读
-            </button>
+            <div class="tip">记忆小贴士：汇报结尾的万能收尾句！表示欢迎提问，显得 open 和 professional。这个句子在任何汇报结尾都能用。</div>
         </div>
 
         <div class="footer">
-            <p>🌟 每天进步一点点 · 明日 08:40 继续推送</p>
-            <p style="margin-top:8px;font-size:12px;">📱 手机访问：https://dingyuki475-cpu.github.io/daily-english/</p>
+            <p>💡 提示：点击 🔊 按钮可听发音</p>
+            <p>📱 网址：https://dingyuki475-cpu.github.io/daily-english/</p>
         </div>
     </div>
 
     <script>
-        let playedCount = 0;
-        const totalCards = 5;
-
         function speak(text) {
             if ('speechSynthesis' in window) {
-                // Cancel any ongoing speech
-                window.speechSynthesis.cancel();
-                
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'en-US';
-                utterance.rate = 0.9;
+                utterance.rate = 0.85;
                 utterance.pitch = 1;
-                
-                // Try to use a good English voice
-                const voices = window.speechSynthesis.getVoices();
-                const englishVoice = voices.find(voice => 
-                    voice.lang.includes('en') && (voice.name.includes('Google') || voice.name.includes('Samantha'))
-                ) || voices.find(voice => voice.lang.includes('en'));
-                
-                if (englishVoice) {
-                    utterance.voice = englishVoice;
-                }
-                
-                window.speechSynthesis.speak(utterance);
-                
-                // Update progress
-                playedCount++;
-                updateProgress();
+                speechSynthesis.speak(utterance);
             } else {
-                alert('您的浏览器不支持语音朗读功能，请使用 Chrome、Edge 或 Safari 浏览器。');
+                alert('抱歉，您的浏览器不支持语音朗读功能。');
             }
-        }
-
-        function updateProgress() {
-            const percentage = (playedCount / totalCards) * 100;
-            document.getElementById('progress').style.width = percentage + '%';
-        }
-
-        // Load voices when available
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.onvoiceschanged = function() {
-                // Voices loaded
-            };
         }
     </script>
 </body>
