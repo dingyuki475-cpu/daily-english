@@ -733,98 +733,80 @@
 
 <script>
   function toggleDay(toggleEl) {
-    const card = toggleEl.closest('.day-card');
+    var card = toggleEl.closest('.day-card');
     card.classList.toggle('open');
   }
 
   function jumpToday() {
-    const el = document.getElementById('day-20260515');
+    var el = document.getElementById('day-20260515');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       el.classList.add('open');
     }
   }
 
-  // 朗读（兼容 HTTPS 限制 + 语音列表延迟加载）
-  let currentBtn = null;
-  let voicesReady = false;
-  let cachedVoices = [];
+  // ——— 朗读功能：优先浏览器语音，不支持时用有道音频（兼容华为手机）———
+  var currentAudio = null;
+  var currentBtn = null;
+  var useYoudao = !('speechSynthesis' in window);
+  var cachedVoices = [];
 
-  function speak(btn, text) {
-    if (currentBtn === btn && speechSynthesis.speaking) {
-      speechSynthesis.cancel();
-      btn.innerHTML = '🔊 朗读';
-      btn.classList.remove('speaking');
-      currentBtn = null;
-      return;
-    }
-    if (speechSynthesis.speaking) {
-      speechSynthesis.cancel();
-      if (currentBtn) { currentBtn.innerHTML = '🔊 朗读'; currentBtn.classList.remove('speaking'); }
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.85;
-    utterance.pitch = 1;
-
-    // 使用缓存的语音列表
-    const voices = cachedVoices.length ? cachedVoices : speechSynthesis.getVoices();
-    const enVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Female'))
-                 || voices.find(v => v.lang === 'en-US')
-                 || voices.find(v => v.lang.startsWith('en'));
-    if (enVoice) utterance.voice = enVoice;
-
-    btn.innerHTML = '⏹ 停止';
-    btn.classList.add('speaking');
-    currentBtn = btn;
-
-    utterance.onstart = () => { btn.innerHTML = '⏹ 停止'; btn.classList.add('speaking'); };
-    utterance.onend = () => { btn.innerHTML = '🔊 朗读'; btn.classList.remove('speaking'); currentBtn = null; };
-    utterance.onerror = (e) => {
-      // HTTPS 下 Chrome 静默失败时，降级用外部 TTS
-      if (e.error === 'not-allowed' || e.error === 'audio-busy' || (!utterance.voice && speechSynthesis.getVoices().length === 0)) {
-        window.open('https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=1', '_blank');
-        btn.innerHTML = '🔊 朗读';
-        btn.classList.remove('speaking');
-        currentBtn = null;
-      } else {
-        btn.innerHTML = '🔊 朗读';
-        btn.classList.remove('speaking');
-        currentBtn = null;
-      }
-    };
-
-    // Chrome bug: 长时间不操作后 speechSynthesis 会卡住，先 cancel 再 speak
-    speechSynthesis.cancel();
-    setTimeout(() => { speechSynthesis.speak(utterance); }, 50);
-  }
-
-  // 预加载并缓存语音列表（反复尝试直到加载成功）
   function loadVoices() {
-    const voices = speechSynthesis.getVoices();
-    if (voices.length > 0) {
-      cachedVoices = voices;
-      voicesReady = true;
-      return;
-    }
+    if (!('speechSynthesis' in window)) return;
+    var voices = speechSynthesis.getVoices();
+    if (voices.length > 0) { cachedVoices = voices; return; }
     setTimeout(loadVoices, 100);
   }
   if ('speechSynthesis' in window) {
     loadVoices();
-    speechSynthesis.onvoiceschanged = () => {
-      cachedVoices = speechSynthesis.getVoices();
-      voicesReady = true;
-    };
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = function() { cachedVoices = speechSynthesis.getVoices(); };
+    }
   }
 
-  // 页面任意点击时激活语音引擎（绕过 Chrome HTTPS 限制）
-  document.addEventListener('click', function() {
-    if ('speechSynthesis' in window && !voicesReady) {
-      const v = speechSynthesis.getVoices();
-      if (v.length) { cachedVoices = v; voicesReady = true; }
-    }
-  }, { once: true });
+  function speak(btn, text) {
+    if (currentBtn === btn) { stopAll(); return; }
+    stopAll();
+    if (useYoudao) { speakYoudao(btn, text); } else { speakBrowser(btn, text); }
+  }
+
+  function stopAll() {
+    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+    if (currentBtn) { currentBtn.innerHTML = '🔊 朗读'; currentBtn.classList.remove('speaking'); currentBtn = null; }
+    if ('speechSynthesis' in window && speechSynthesis.speaking) { speechSynthesis.cancel(); }
+  }
+
+  function resetBtn(btn) {
+    if (btn) { btn.innerHTML = '🔊 朗读'; btn.classList.remove('speaking'); }
+    if (currentBtn === btn) currentBtn = null;
+  }
+
+  function speakBrowser(btn, text) {
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = 0.85; u.pitch = 1;
+    var voices = cachedVoices.length ? cachedVoices : speechSynthesis.getVoices();
+    var v = voices.find(function(x){return x.lang.startsWith('en') && x.name.toLowerCase().includes('female');})
+            || voices.find(function(x){return x.lang === 'en-US';})
+            || voices.find(function(x){return x.lang.startsWith('en');});
+    if (v) u.voice = v;
+    btn.innerHTML = '⏹ 停止'; btn.classList.add('speaking'); currentBtn = btn;
+    u.onend = function() { resetBtn(btn); };
+    u.onerror = function() { resetBtn(btn); speakYoudao(btn, text); };
+    speechSynthesis.cancel();
+    setTimeout(function() { speechSynthesis.speak(u); }, 50);
+  }
+
+  function speakYoudao(btn, text) {
+    var audio = new Audio();
+    audio.src = 'https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=1';
+    audio.autoplay = true;
+    btn.innerHTML = '⏹ 停止'; btn.classList.add('speaking'); currentBtn = btn; currentAudio = audio;
+    audio.onended = function() { resetBtn(btn); currentAudio = null; };
+    audio.onerror = function() {
+      audio.src = 'https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=2';
+      audio.play().catch(function() { resetBtn(btn); currentAudio = null; });
+    };
+  }
 </script>
 </body>
 </html>
