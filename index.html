@@ -391,13 +391,12 @@
 </div>
 
 <script>
-  // ——— 朗读功能 ———
+  // ——— 朗读功能（兼容 HTTPS 限制 + 语音列表延迟加载）———
   let currentBtn = null;
+  let voicesReady = false;
+  let cachedVoices = [];
+
   function speak(btn, text) {
-    if (!('speechSynthesis' in window)) {
-      alert('您的浏览器不支持语音朗读，建议使用 Chrome 浏览器。');
-      return;
-    }
     if (currentBtn === btn && speechSynthesis.speaking) {
       speechSynthesis.cancel();
       btn.innerHTML = '🔊 朗读';
@@ -409,24 +408,60 @@
       speechSynthesis.cancel();
       if (currentBtn) { currentBtn.innerHTML = '🔊 朗读'; currentBtn.classList.remove('speaking'); }
     }
+
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-US';
     utterance.rate = 0.85;
     utterance.pitch = 1;
-    const voices = speechSynthesis.getVoices();
+
+    // 使用缓存的语音列表
+    const voices = cachedVoices.length ? cachedVoices : speechSynthesis.getVoices();
     const enVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Female'))
                  || voices.find(v => v.lang === 'en-US')
                  || voices.find(v => v.lang.startsWith('en'));
     if (enVoice) utterance.voice = enVoice;
-    utterance.onstart = () => { btn.innerHTML = '⏹ 停止'; btn.classList.add('speaking'); currentBtn = btn; };
+
+    btn.innerHTML = '⏹ 停止';
+    btn.classList.add('speaking');
+    currentBtn = btn;
+
+    utterance.onstart = () => { btn.innerHTML = '⏹ 停止'; btn.classList.add('speaking'); };
     utterance.onend = () => { btn.innerHTML = '🔊 朗读'; btn.classList.remove('speaking'); currentBtn = null; };
-    utterance.onerror = () => { btn.innerHTML = '🔊 朗读'; btn.classList.remove('speaking'); currentBtn = null; };
-    speechSynthesis.speak(utterance);
+    utterance.onerror = (e) => {
+      // HTTPS 下语音合成失败时，降级用有道词典朗读
+      if (e.error === 'not-allowed' || e.error === 'audio-busy' || (!utterance.voice && speechSynthesis.getVoices().length === 0)) {
+        window.open('https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=1', '_blank');
+      }
+      btn.innerHTML = '🔊 朗读';
+      btn.classList.remove('speaking');
+      currentBtn = null;
+    };
+
+    // Chrome bug 修复：先 cancel 再延时 speak
+    speechSynthesis.cancel();
+    setTimeout(() => { speechSynthesis.speak(utterance); }, 50);
+  }
+
+  // 反复尝试加载语音列表直到成功
+  function loadVoices() {
+    const voices = speechSynthesis.getVoices();
+    if (voices.length > 0) { cachedVoices = voices; voicesReady = true; return; }
+    setTimeout(loadVoices, 100);
   }
   if ('speechSynthesis' in window) {
-    speechSynthesis.getVoices();
-    speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+    loadVoices();
+    speechSynthesis.onvoiceschanged = () => {
+      cachedVoices = speechSynthesis.getVoices();
+      voicesReady = true;
+    };
   }
+  // 首次点击页面时激活语音引擎
+  document.addEventListener('click', function() {
+    if ('speechSynthesis' in window && !voicesReady) {
+      const v = speechSynthesis.getVoices();
+      if (v.length) { cachedVoices = v; voicesReady = true; }
+    }
+  }, { once: true });
 
   // ——— 折叠/展开 ———
   function toggleDay(id, btn) {
