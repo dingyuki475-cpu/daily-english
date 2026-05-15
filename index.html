@@ -1,121 +1,485 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>每日英语 · 职场沟通汇报篇</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .header h1 { font-size: 20px; color: #333; margin-bottom: 5px; }
-        .header .date { font-size: 14px; color: #888; }
-        .card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .card-title { font-size: 14px; color: #ff6b9d; font-weight: bold; margin-bottom: 12px; }
-        .sentence { font-size: 18px; color: #333; margin-bottom: 10px; line-height: 1.6; }
-        .meaning { font-size: 14px; color: #666; margin-bottom: 8px; padding-left: 12px; border-left: 3px solid #ff6b9d; }
-        .phonetic { font-size: 13px; color: #999; margin-bottom: 12px; }
-        .dialogue { background: #f8f9fa; border-radius: 8px; padding: 14px; margin-bottom: 12px; font-size: 14px; line-height: 1.7; }
-        .dialogue .speaker-a { color: #ff6b9d; }
-        .dialogue .speaker-b { color: #4a90d9; }
-        .tip { font-size: 13px; color: #666; background: #fff8f0; padding: 12px; border-radius: 8px; border-left: 3px solid #ffa500; }
-        .tip::before { content: '💡 '; }
-        .speak-btn { background: linear-gradient(135deg, #ff6b9d, #ff8a80); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; margin-top: 8px; }
-        .speak-btn:hover { opacity: 0.9; }
-        .footer { text-align: center; margin-top: 20px; color: #aaa; font-size: 12px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>每日英语 · 外贸业务员专属</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container { max-width: 780px; margin: 0 auto; }
+
+    /* 顶部固定标题 */
+    .site-header {
+      background: linear-gradient(135deg, #0ea5e9, #10b981);
+      color: white;
+      border-radius: 16px;
+      padding: 22px 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 20px rgba(14,165,233,0.3);
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+    }
+    .site-header h1 { font-size: 1.4rem; margin-bottom: 4px; }
+    .site-header p { font-size: 0.9rem; opacity: 0.88; }
+    .site-header .stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .site-header .stat-item {
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.82rem;
+    }
+
+    /* 每日区块 */
+    .day-block {
+      background: white;
+      border-radius: 16px;
+      margin-bottom: 28px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    }
+    .day-header {
+      background: linear-gradient(135deg, #0ea5e9, #10b981);
+      color: white;
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .day-header.theme-week2 { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+    .day-header.theme-week3 { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+    .day-header.theme-week4 { background: linear-gradient(135deg, #10b981, #0ea5e9); }
+    .day-title { font-size: 1.05rem; font-weight: 700; }
+    .day-date { font-size: 0.82rem; opacity: 0.88; }
+    .day-tag {
+      background: rgba(255,255,255,0.25);
+      border-radius: 12px;
+      padding: 3px 12px;
+      font-size: 0.8rem;
+    }
+
+    /* 折叠控制 */
+    .day-toggle {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .day-toggle:hover { background: rgba(255,255,255,0.2); }
+    .day-content { padding: 20px; }
+    .day-content.collapsed { display: none; }
+
+    /* 句子卡片 */
+    .card {
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
+      border-left: 4px solid #0ea5e9;
+      background: #f8fafc;
+      transition: transform 0.2s;
+    }
+    .card:hover { transform: translateY(-1px); }
+    .card:nth-child(1) { border-left-color: #0ea5e9; }
+    .card:nth-child(2) { border-left-color: #10b981; }
+    .card:nth-child(3) { border-left-color: #f59e0b; }
+    .card:nth-child(4) { border-left-color: #8b5cf6; }
+    .card:nth-child(5) { border-left-color: #ef4444; }
+    .card-num {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .sentence {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 5px;
+      line-height: 1.5;
+    }
+    .meaning { font-size: 0.9rem; color: #475569; margin-bottom: 3px; }
+    .phonetic { font-size: 0.86rem; color: #0ea5e9; font-family: monospace; margin-bottom: 10px; }
+    .dialog-box {
+      background: white;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 10px 0;
+      border: 1px solid #e2e8f0;
+    }
+    .dialog-box .label { font-size: 0.76rem; color: #64748b; font-weight: 600; margin-bottom: 6px; }
+    .dialog-line { margin-bottom: 5px; font-size: 0.88rem; color: #334155; line-height: 1.5; }
+    .dialog-line span.who { font-weight: 700; margin-right: 4px; }
+    .dialog-line span.who.a { color: #0ea5e9; }
+    .dialog-line span.who.b { color: #10b981; }
+    .dialog-trans { color: #94a3b8; font-size: 0.8rem; margin-top: 4px; }
+    .tip {
+      background: #fffbeb;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 0.85rem;
+      color: #92400e;
+      margin-top: 8px;
+      border: 1px solid #fde68a;
+    }
+    .tip::before { content: '💡 '; }
+    .btn-speak {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #0ea5e9;
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 6px 16px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 8px;
+    }
+    .btn-speak:hover { background: #0284c7; transform: scale(1.03); }
+    .btn-speak:active { transform: scale(0.97); }
+    .btn-speak.speaking { background: #ef4444; }
+
+    /* 历史导航 */
+    .history-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .history-nav .nav-label { font-size: 0.82rem; color: #64748b; width: 100%; margin-bottom: 4px; }
+    .nav-btn {
+      background: #f1f5f9;
+      border: none;
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: #475569;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: #0ea5e9; color: white; }
+    .nav-btn.active { background: #0ea5e9; color: white; }
+
+    footer {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.82rem;
+      padding: 20px 0 10px;
+    }
+    footer a { color: #0ea5e9; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📚 每日英语</h1>
-            <p class="date">2026年4月16日 · 周四 · 职场沟通汇报篇</p>
-        </div>
+<div class="container">
 
-        <div class="card">
-            <div class="card-title">📋 第1句</div>
-            <div class="sentence">"Here's an update on the project progress so far."</div>
-            <button class="speak-btn" onclick="speak('Here is an update on the project progress so far.')">🔊 朗读</button>
-            <div class="meaning">词义：这是目前为止项目进展的最新情况。</div>
-            <div class="phonetic">音标：/hɪərz ən ˈʌpdeɪt ɒn ðə ˈprɒdʒekt ˈprəʊɡres səʊ fɑː/</div>
-            <div class="dialogue">
-                <span class="speaker-a">A:</span> Good morning, everyone. Let's start the meeting.<br>
-                <span class="speaker-b">B:</span> Sure. <span class="speaker-a">A:</span> "Here's an update on the project progress so far."
-            </div>
-            <div class="tip">记忆小贴士：汇报开始时常用 "Here's an update" 引出内容，比直接说 "I want to report..." 更自然专业。</div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">📋 第2句</div>
-            <div class="sentence">"We've completed about 70% of the work, and we're on track to finish by May."</div>
-            <button class="speak-btn" onclick="speak('We have completed about 70 percent of the work, and we are on track to finish by May.')">🔊 朗读</button>
-            <div class="meaning">词义：我们已完成约 70% 的工作，有望在5月前完成。</div>
-            <div class="phonetic">音标：/wiːv kəmˈpliːtɪd əˈbaʊt ˈsevnti pəˈsɛnt ɒv ðə wɜːk ænd wɪər ɒn træk tuː ˈfɪnɪʃ baɪ meɪ/</div>
-            <div class="dialogue">
-                <span class="speaker-b">B:</span> "We've completed about 70% of the work, and we're on track to finish by May."<br>
-                <span class="speaker-a">A:</span> Great! That sounds good.
-            </div>
-            <div class="tip">记忆小贴士："on track" 是"进度正常"的意思，"off track" 则表示落后于计划。记住这对反义词很有用！</div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">📋 第3句</div>
-            <div class="sentence">"The biggest challenge we're facing is the supply chain delay."</div>
-            <button class="speak-btn" onclick="speak('The biggest challenge we are facing is the supply chain delay.')">🔊 朗读</button>
-            <div class="meaning">词义：我们面临的最大挑战是供应链延迟问题。</div>
-            <div class="phonetic">音标：/ðə ˈbɪɡɪst ˈtʃælɪndʒ wɪə ˈfeɪsɪŋ ɪz ðə səˈplaɪ tʃeɪn dɪˈleɪ/</div>
-            <div class="dialogue">
-                <span class="speaker-a">A:</span> "The biggest challenge we're facing is the supply chain delay."<br>
-                <span class="speaker-b">B:</span> Do you have any solutions in mind?
-            </div>
-            <div class="tip">记忆小贴士：汇报问题时，先说 "biggest challenge"，再说原因，逻辑清晰，外国人很容易 follow。</div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">📋 第4句</div>
-            <div class="sentence">"I'd recommend we source from an alternative supplier to avoid further delays."</div>
-            <button class="speak-btn" onclick="speak('I would recommend we source from an alternative supplier to avoid further delays.')">🔊 朗读</button>
-            <div class="meaning">词义：我建议我们从备选供应商处采购，以避免进一步延误。</div>
-            <div class="phonetic">音标：/aɪd ˌrekəˈmɛnd wiː sɔːs frɒm æn ɔːlˈtɜːnətɪv səˈplaɪə tuː əˈvɔɪd ˈfɜːðə dɪˈleɪz/</div>
-            <div class="dialogue">
-                <span class="speaker-b">B:</span> What do you suggest we do?<br>
-                <span class="speaker-a">A:</span> "I'd recommend we source from an alternative supplier."
-            </div>
-            <div class="tip">记忆小贴士："I'd recommend" 开头显得专业有礼，后面接完整建议句子，外国客户听了会觉得很靠谱！</div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">📋 第5句</div>
-            <div class="sentence">"Please let me know if you have any questions or need more details."</div>
-            <button class="speak-btn" onclick="speak('Please let me know if you have any questions or need more details.')">🔊 朗读</button>
-            <div class="meaning">词义：如有任何问题或需要更多细节，请随时告知我。</div>
-            <div class="phonetic">音标：/pliːz lɛt miː nəʊ ɪf juː hæv ˈeni ˈkwestʃənz ɔː niːd mɔː ˈdiːteɪlz/</div>
-            <div class="dialogue">
-                <span class="speaker-a">A:</span> That's the end of my report. "Please let me know if you have any questions."<br>
-                <span class="speaker-b">B:</span> No questions. Well done!
-            </div>
-            <div class="tip">记忆小贴士：汇报结尾的万能收尾句！表示欢迎提问，显得 open 和 professional。这个句子在任何汇报结尾都能用。</div>
-        </div>
-
-        <div class="footer">
-            <p>💡 提示：点击 🔊 按钮可听发音</p>
-            <p>📱 网址：https://dingyuki475-cpu.github.io/daily-english/</p>
-        </div>
+  <!-- 顶部总览 -->
+  <div class="site-header">
+    <h1>📚 每日英语 · 外贸业务员专属</h1>
+    <p>坚持每天5句，3个月独立接待客户 🎯</p>
+    <div class="stats">
+      <span class="stat-item" id="total-days">📅 已学 -- 天</span>
+      <span class="stat-item" id="total-sentences">📝 累计 -- 句</span>
+      <span class="stat-item">🔊 点击句子即可朗读</span>
     </div>
+  </div>
 
-    <script>
-        function speak(text) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-US';
-                utterance.rate = 0.85;
-                utterance.pitch = 1;
-                speechSynthesis.speak(utterance);
-            } else {
-                alert('抱歉，您的浏览器不支持语音朗读功能。');
-            }
-        }
-    </script>
+  <!-- 快速跳转 -->
+  <div class="history-nav" id="nav-bar">
+    <div class="nav-label">📋 历史记录快速跳转：</div>
+    <!-- 由JS动态生成 -->
+  </div>
+
+  <!-- ==================== 每日内容区（新内容加在最上面）==================== -->
+
+  <!-- DAY: 2026-05-15 -->
+  <div class="day-block" id="day-2026-05-15" data-theme="week1">
+    <div class="day-header">
+      <div>
+        <div class="day-title">📧 职场沟通 · 邮件篇</div>
+        <div class="day-date">2026年5月15日（周五）· 第1周第5天</div>
+      </div>
+      <span class="day-tag">职场沟通</span>
+      <button class="day-toggle" onclick="toggleDay('day-2026-05-15', this)" title="折叠/展开">▼</button>
+    </div>
+    <div class="day-content" id="content-day-2026-05-15">
+      <div class="card">
+        <div class="card-num">Sentence 01</div>
+        <div class="sentence">"I am writing to follow up on my previous email."</div>
+        <div class="meaning">📖 词义：我写信是为了跟进我之前发送的邮件。</div>
+        <div class="phonetic">🔊 /aɪ æm ˈraɪtɪŋ tuː ˈfɒləʊ ʌp ɒn maɪ ˈpriːviəs ˈiːmeɪl/</div>
+        <div class="dialog-box">
+          <div class="label">💬 场景对话 · 催回复</div>
+          <div class="dialog-line"><span class="who a">A：</span>Hi David, I am writing to follow up on my previous email about the shipment schedule.</div>
+          <div class="dialog-line"><span class="who b">B：</span>Oh sorry, I got caught up. I'll get back to you today.</div>
+          <div class="dialog-trans">（跟进发货时间邮件 / 抱歉，今天回复）</div>
+        </div>
+        <div class="tip">记忆贴士："follow up" = 跟进，是外贸邮件中超高频词。"I am writing to..." 是写邮件的万能开头！</div>
+        <button class="btn-speak" onclick="speak(this, 'I am writing to follow up on my previous email.')">🔊 朗读</button>
+      </div>
+      <div class="card">
+        <div class="card-num">Sentence 02</div>
+        <div class="sentence">"Please find the attached file for your reference."</div>
+        <div class="meaning">📖 词义：请查看附件，供您参考。</div>
+        <div class="phonetic">🔊 /pliːz faɪnd ðə əˈtæʧt faɪl fɔː jɔː ˈrefrəns/</div>
+        <div class="dialog-box">
+          <div class="label">💬 场景对话 · 发报价单</div>
+          <div class="dialog-line"><span class="who a">A：</span>Hi Sarah, please find the attached file for your reference. It includes our latest price list.</div>
+          <div class="dialog-line"><span class="who b">B：</span>Thank you! I'll review it and get back to you soon.</div>
+          <div class="dialog-trans">（附件是最新价格表 / 谢谢，尽快回复）</div>
+        </div>
+        <div class="tip">记忆贴士："Please find the attached..." 是发附件的标准句，比直接说 "I attached..." 更正式礼貌！</div>
+        <button class="btn-speak" onclick="speak(this, 'Please find the attached file for your reference.')">🔊 朗读</button>
+      </div>
+      <div class="card">
+        <div class="card-num">Sentence 03</div>
+        <div class="sentence">"Could you please confirm receipt of this email?"</div>
+        <div class="meaning">📖 词义：您能确认已收到这封邮件吗？</div>
+        <div class="phonetic">🔊 /kʊd juː pliːz kənˈfɜːm rɪˈsiːt ɒv ðɪs ˈiːmeɪl/</div>
+        <div class="dialog-box">
+          <div class="label">💬 场景对话 · 确认收件</div>
+          <div class="dialog-line"><span class="who a">A：</span>I sent you the contract yesterday. Could you please confirm receipt of this email?</div>
+          <div class="dialog-line"><span class="who b">B：</span>Yes, I received it. I'm reviewing it now.</div>
+          <div class="dialog-trans">（确认是否收到合同 / 收到，正在审阅）</div>
+        </div>
+        <div class="tip">记忆贴士："confirm receipt" = 确认收到，receipt /rɪˈsiːt/ 注意 p 不发音！</div>
+        <button class="btn-speak" onclick="speak(this, 'Could you please confirm receipt of this email?')">🔊 朗读</button>
+      </div>
+      <div class="card">
+        <div class="card-num">Sentence 04</div>
+        <div class="sentence">"I apologize for any inconvenience this may have caused."</div>
+        <div class="meaning">📖 词义：对此可能给您带来的不便，我深感抱歉。</div>
+        <div class="phonetic">🔊 /aɪ əˈpɒlədʒaɪz fɔː ˈeni ɪnkənˈviːniəns ðɪs meɪ həv kɔːzd/</div>
+        <div class="dialog-box">
+          <div class="label">💬 场景对话 · 延误道歉</div>
+          <div class="dialog-line"><span class="who a">A：</span>The shipment was delayed due to port congestion. I apologize for any inconvenience this may have caused.</div>
+          <div class="dialog-line"><span class="who b">B：</span>I understand. Please keep me updated on the new arrival date.</div>
+          <div class="dialog-trans">（港口拥堵延误道歉 / 理解，请及时更新）</div>
+        </div>
+        <div class="tip">记忆贴士：外贸道歉邮件"黄金句"，背下来能处理80%的延误投诉！</div>
+        <button class="btn-speak" onclick="speak(this, 'I apologize for any inconvenience this may have caused.')">🔊 朗读</button>
+      </div>
+      <div class="card">
+        <div class="card-num">Sentence 05</div>
+        <div class="sentence">"I look forward to hearing from you soon."</div>
+        <div class="meaning">📖 词义：期待您的早日回复。</div>
+        <div class="phonetic">🔊 /aɪ lʊk ˈfɔːwəd tuː ˈhɪərɪŋ frɒm juː suːn/</div>
+        <div class="dialog-box">
+          <div class="label">💬 场景对话 · 邮件结尾</div>
+          <div class="dialog-line"><span class="who a">A：</span>Please let me know if you have any questions. I look forward to hearing from you soon.</div>
+          <div class="dialog-line"><span class="who b">B：</span>Sure, I'll get back to you by end of day.</div>
+          <div class="dialog-trans">（如有问题请告知 / 今天下班前回复）</div>
+        </div>
+        <div class="tip">记忆贴士：邮件结尾万能句！"look forward to + doing" 是固定搭配，后面接动词-ing。</div>
+        <button class="btn-speak" onclick="speak(this, 'I look forward to hearing from you soon.')">🔊 朗读</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY: 2026-04-21 -->
+  <div class="day-block" id="day-2026-04-21" data-theme="week3">
+    <div class="day-header theme-week3">
+      <div>
+        <div class="day-title">🌍 日常生活 · 社交场景</div>
+        <div class="day-date">2026年4月21日（周二）· 第3周第7天</div>
+      </div>
+      <span class="day-tag">日常生活</span>
+      <button class="day-toggle" onclick="toggleDay('day-2026-04-21', this)" title="折叠/展开">▼</button>
+    </div>
+    <div class="day-content" id="content-day-2026-04-21">
+      <div class="card">
+        <div class="card-num">Sentence 01</div>
+        <div class="sentence">"It's so nice to finally meet you in person!"</div>
+        <div class="meaning">📖 词义：终于见到本人了，太高兴了！</div>
+        <div class="phonetic">🔊 /ɪts soʊ naɪs tə ˈfaɪnəli miːt juː ɪn ˈpɜːrsən/</div>
+        <div class="dialog-box">
+          <div class="label">💬 场景对话 · 初次见面</div>
+          <div class="dialog-line"><span class="who a">A：</span>It's so nice to finally meet you in person! I've heard so much about you.</div>
+          <div class="dialog-line"><span class="who b">B：</span>Likewise! I've been looking forward to this meeting.</div>
+          <div class="dialog-trans">（终于见到本人了 / 我也是，很期待）</div>
+        </div>
+        <div class="tip">记忆贴士："in person"= 亲自/本人，比"Nice to meet you"更热情，初次见面必备！</div>
+        <button class="btn-speak" onclick="speak(this, 'It\'s so nice to finally meet you in person!')">🔊 朗读</button>
+      </div>
+      <div class="card">
+        <div class="card-num">Sentence 02</div>
+        <div class="sentence">"Would you like me to take a photo for you?"</div>
+        <div class="meaning">📖 词义：需要我帮你拍张照吗？</div>
+        <div class="phonetic">🔊 /wʊd juː laɪk miː tə teɪk ə ˈfoʊtoʊ fɔːr juː/</div>
+        <div class="dialog-box">
+          <div class="label">💬 场景对话 · 陪同参观</div>
+          <div class="dialog-line"><span class="who a">A：</span>Would you like me to take a photo for you? The view here is beautiful.</div>
+          <div class="dialog-line"><span class="who b">B：</span>Oh, that would be wonderful! Thank you so much.</div>
+          <div class="dialog-trans">（帮拍照吗，景色很美 / 太好了，谢谢）</div>
+        </div>
+        <div class="tip">记忆贴士："Would you like me to..." 语气礼貌有分寸，陪同客户参观时主动提出！</div>
+        <button class="btn-speak" onclick="speak(this, 'Would you like me to take a photo for you?')">🔊 朗读</button>
+      </div>
+      <div class="card">
+        <div class="card-num">Sentence 03</div>
+        <div class="sentence">"Please feel free to ask if you need anything."</div>
+        <div class="meaning">📖 词义：如果有任何需要，请随时告诉我。</div>
+        <div class="phonetic">🔊 /pliːz fiːl friː tə æsk ɪf juː niːd ˈeniθɪŋ/</div>
+        <div class="dialog-box">
+          <div class="label">💬 场景对话 · 安顿入住</div>
+          <div class="dialog-line"><span class="who a">A：</span>This is your hotel room. Please feel free to ask if you need anything.</div>
+          <div class="dialog-line"><span class="who b">B：</span>Great, thanks! Could you actually recommend a good restaurant nearby?</div>
+          <div class="dialog-trans">（这是您的房间，有需要随时告知 / 附近有好餐厅推荐吗）</div>
+        </div>
+        <div class="tip">记忆贴士："feel free to..."= 尽管/随时。安顿客人后告别时必说这句！</div>
+        <button class="btn-speak" onclick="speak(this, 'Please feel free to ask if you need anything.')">🔊 朗读</button>
+      </div>
+      <div class="card">
+        <div class="card-num">Sentence 04</div>
+        <div class="sentence">"What kind of food do you usually enjoy?"</div>
+        <div class="meaning">📖 词义：您平时喜欢吃什么口味的食物？</div>
+        <div class="phonetic">🔊 /wɒt kaɪnd əv fuːd duː juː ˈjuːʒuəli ɪnˈdʒɔɪ/</div>
+        <div class="dialog-box">
+          <div class="label">💬 场景对话 · 餐前问询</div>
+          <div class="dialog-line"><span class="who a">A：</span>What kind of food do you usually enjoy? We have many great local restaurants.</div>
+          <div class="dialog-line"><span class="who b">B：</span>I love seafood! Is there a good place nearby?</div>
+          <div class="dialog-trans">（您喜欢吃什么 / 我喜欢海鲜）</div>
+        </div>
+        <div class="tip">记忆贴士：带客用餐前先问口味，"usually enjoy"比"like to eat"更自然地道！</div>
+        <button class="btn-speak" onclick="speak(this, 'What kind of food do you usually enjoy?')">🔊 朗读</button>
+      </div>
+      <div class="card">
+        <div class="card-num">Sentence 05</div>
+        <div class="sentence">"I really enjoyed spending time with you today."</div>
+        <div class="meaning">📖 词义：今天和您共度时光真的很愉快。</div>
+        <div class="phonetic">🔊 /aɪ ˈrɪəli ɪnˈdʒɔɪd ˈspendɪŋ taɪm wɪð juː təˈdeɪ/</div>
+        <div class="dialog-box">
+          <div class="label">💬 场景对话 · 送别</div>
+          <div class="dialog-line"><span class="who a">A：</span>I really enjoyed spending time with you today. Hope to see you again soon!</div>
+          <div class="dialog-line"><span class="who b">B：</span>Me too! It was a wonderful day. Thank you for everything.</div>
+          <div class="dialog-trans">（今天很愉快，希望很快再见 / 我也是，谢谢你的一切）</div>
+        </div>
+        <div class="tip">记忆贴士：送别时说这句，温暖真诚。"spending time with you"比"meeting you"更有感情！</div>
+        <button class="btn-speak" onclick="speak(this, 'I really enjoyed spending time with you today.')">🔊 朗读</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 历史内容区结束 ==================== -->
+
+  <footer>
+    每日英语 · 外贸业务员专属学习计划 🌟 | 固定网址：<a href="https://dingyuki475-cpu.github.io/daily-english/" target="_blank">GitHub Pages 手机版</a>
+  </footer>
+</div>
+
+<script>
+  // ——— 朗读功能 ———
+  let currentBtn = null;
+  function speak(btn, text) {
+    if (!('speechSynthesis' in window)) {
+      alert('您的浏览器不支持语音朗读，建议使用 Chrome 浏览器。');
+      return;
+    }
+    if (currentBtn === btn && speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+      btn.innerHTML = '🔊 朗读';
+      btn.classList.remove('speaking');
+      currentBtn = null;
+      return;
+    }
+    if (speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+      if (currentBtn) { currentBtn.innerHTML = '🔊 朗读'; currentBtn.classList.remove('speaking'); }
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+    utterance.pitch = 1;
+    const voices = speechSynthesis.getVoices();
+    const enVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Female'))
+                 || voices.find(v => v.lang === 'en-US')
+                 || voices.find(v => v.lang.startsWith('en'));
+    if (enVoice) utterance.voice = enVoice;
+    utterance.onstart = () => { btn.innerHTML = '⏹ 停止'; btn.classList.add('speaking'); currentBtn = btn; };
+    utterance.onend = () => { btn.innerHTML = '🔊 朗读'; btn.classList.remove('speaking'); currentBtn = null; };
+    utterance.onerror = () => { btn.innerHTML = '🔊 朗读'; btn.classList.remove('speaking'); currentBtn = null; };
+    speechSynthesis.speak(utterance);
+  }
+  if ('speechSynthesis' in window) {
+    speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+  }
+
+  // ——— 折叠/展开 ———
+  function toggleDay(id, btn) {
+    const content = document.getElementById('content-' + id);
+    if (content.classList.contains('collapsed')) {
+      content.classList.remove('collapsed');
+      btn.textContent = '▼';
+    } else {
+      content.classList.add('collapsed');
+      btn.textContent = '▶';
+    }
+  }
+
+  // ——— 自动折叠旧内容 + 生成导航 + 统计 ———
+  window.addEventListener('DOMContentLoaded', () => {
+    const blocks = document.querySelectorAll('.day-block');
+    const navBar = document.getElementById('nav-bar');
+    let totalDays = blocks.length;
+    let totalSentences = 0;
+
+    blocks.forEach((block, idx) => {
+      const id = block.id;
+      const titleEl = block.querySelector('.day-title');
+      const dateEl = block.querySelector('.day-date');
+      const cards = block.querySelectorAll('.card');
+      totalSentences += cards.length;
+
+      // 非第一条自动折叠
+      if (idx > 0) {
+        const content = document.getElementById('content-' + id);
+        const toggle = block.querySelector('.day-toggle');
+        content.classList.add('collapsed');
+        toggle.textContent = '▶';
+      }
+
+      // 生成导航按钮
+      const navBtn = document.createElement('button');
+      navBtn.className = 'nav-btn' + (idx === 0 ? ' active' : '');
+      navBtn.textContent = dateEl ? dateEl.textContent.split('（')[0] : id;
+      navBtn.onclick = () => {
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // 展开目标
+        const content = document.getElementById('content-' + id);
+        const toggle = block.querySelector('.day-toggle');
+        content.classList.remove('collapsed');
+        toggle.textContent = '▼';
+      };
+      navBar.appendChild(navBtn);
+    });
+
+    document.getElementById('total-days').textContent = '📅 已学 ' + totalDays + ' 天';
+    document.getElementById('total-sentences').textContent = '📝 累计 ' + totalSentences + ' 句';
+  });
+</script>
 </body>
 </html>
