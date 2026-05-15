@@ -380,124 +380,134 @@
 </div>
 
 <script>
-  // ——— 朗读功能：优先浏览器语音，不支持时用有道音频 ———
-  let currentAudio = null;
-  let currentBtn = null;
-  let useYoudao = false;
-  let voicesReady = false;
-  let cachedVoices = [];
-
-  // 检测浏览器是否支持 Web Speech API
-  if (!('speechSynthesis' in window)) {
-    useYoudao = true;
-  }
+  // ——— 朗读功能：三种方案自动降级 ———
+  // 方案1: Web Speech API → 方案2: Google TTS Audio → 方案3: 有道音频
+  var currentAudio = null;
+  var currentBtn = null;
+  var cachedVoices = [];
+  var speechChecked = false;
+  var speechWorks = null; // null=未测试, true=可用, false=不可用
 
   function loadVoices() {
     if (!('speechSynthesis' in window)) return;
     var voices = speechSynthesis.getVoices();
-    if (voices.length > 0) { cachedVoices = voices; voicesReady = true; return; }
+    if (voices.length > 0) { cachedVoices = voices; return; }
     setTimeout(loadVoices, 100);
   }
   if ('speechSynthesis' in window) {
     loadVoices();
     if (speechSynthesis.onvoiceschanged !== undefined) {
-      speechSynthesis.onvoiceschanged = function() {
-        cachedVoices = speechSynthesis.getVoices();
-        voicesReady = true;
-      };
+      speechSynthesis.onvoiceschanged = function() { cachedVoices = speechSynthesis.getVoices(); };
     }
   }
 
   function speak(btn, text) {
-    // 正在播放同一个 -> 停止
-    if (currentBtn === btn) {
-      stopAudio();
-      return;
-    }
-    // 先停掉之前的
-    stopAudio();
+    if (currentBtn === btn) { stopAll(); return; }
+    stopAll();
+    btn.innerHTML = '⏳ 播放中...';
+    btn.classList.add('speaking');
+    currentBtn = btn;
 
-    if (useYoudao) {
-      speakYoudao(btn, text);
-    } else {
+    if (speechWorks === true) {
       speakBrowser(btn, text);
+    } else if (speechWorks === false) {
+      speakAudio(btn, text);
+    } else {
+      // 首次尝试浏览器语音
+      if ('speechSynthesis' in window) {
+        speakBrowser(btn, text);
+      } else {
+        speechWorks = false;
+        speakAudio(btn, text);
+      }
     }
   }
 
-  function stopAudio() {
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio = null;
-    }
-    if (currentBtn) {
-      currentBtn.innerHTML = '🔊 朗读';
-      currentBtn.classList.remove('speaking');
-      currentBtn = null;
-    }
-    if ('speechSynthesis' in window && speechSynthesis.speaking) {
-      speechSynthesis.cancel();
-    }
-  }
-
-  // 方案1：浏览器 Web Speech API
-  function speakBrowser(btn, text) {
-    var utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.85;
-    utterance.pitch = 1;
-
-    var voices = cachedVoices.length ? cachedVoices : speechSynthesis.getVoices();
-    var enVoice = voices.find(function(v) { return v.lang.startsWith('en') && v.name.toLowerCase().includes('female'); })
-                 || voices.find(function(v) { return v.lang === 'en-US'; })
-                 || voices.find(function(v) { return v.lang.startsWith('en'); });
-    if (enVoice) utterance.voice = enVoice;
-
-    btn.innerHTML = '⏹ 停止';
-    btn.classList.add('speaking');
-    currentBtn = btn;
-
-    utterance.onend = function() { resetBtn(btn); };
-    utterance.onerror = function(e) {
-      // 浏览器语音失败 -> 降级到有道
-      console.log('Speech error:', e.error, '-> fallback to Youdao');
-      resetBtn(btn);
-      speakYoudao(btn, text);
-    };
-
-    speechSynthesis.cancel();
-    setTimeout(function() { speechSynthesis.speak(utterance); }, 50);
-  }
-
-  // 方案2：有道词典音频（兼容所有手机）
-  function speakYoudao(btn, text) {
-    var audio = new Audio();
-    audio.src = 'https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=1';
-    audio.autoplay = true;
-    audio.preload = 'auto';
-
-    btn.innerHTML = '⏹ 停止';
-    btn.classList.add('speaking');
-    currentBtn = btn;
-    currentAudio = audio;
-
-    audio.onended = function() { resetBtn(btn); currentAudio = null; };
-    audio.onerror = function() {
-      console.log('Youdao audio error, trying type=2');
-      // 备用：英式发音
-      audio.src = 'https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=2';
-      audio.play().catch(function() {
-        resetBtn(btn);
-        currentAudio = null;
-      });
-    };
+  function stopAll() {
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; currentAudio = null; }
+    if (currentBtn) { currentBtn.innerHTML = '🔊 朗读'; currentBtn.classList.remove('speaking'); currentBtn = null; }
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
   }
 
   function resetBtn(btn) {
-    if (btn) {
-      btn.innerHTML = '🔊 朗读';
-      btn.classList.remove('speaking');
-    }
+    if (btn) { btn.innerHTML = '🔊 朗读'; btn.classList.remove('speaking'); }
     if (currentBtn === btn) currentBtn = null;
+  }
+
+  // 方案1: Web Speech API
+  function speakBrowser(btn, text) {
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = 0.85; u.pitch = 1;
+    var voices = cachedVoices.length ? cachedVoices : speechSynthesis.getVoices();
+    var v = voices.find(function(x){return x.lang.startsWith('en') && x.name.toLowerCase().includes('female');})
+            || voices.find(function(x){return x.lang === 'en-US';})
+            || voices.find(function(x){return x.lang.startsWith('en');});
+    if (v) u.voice = v;
+    var timeout = setTimeout(function() {
+      // 3秒没反应说明浏览器语音不工作
+      speechSynthesis.cancel();
+      speechWorks = false;
+      console.log('Web Speech timeout -> fallback to Audio');
+      speakAudio(btn, text);
+    }, 3000);
+    u.onstart = function() { clearTimeout(timeout); speechWorks = true; };
+    u.onend = function() { clearTimeout(timeout); resetBtn(btn); };
+    u.onerror = function() {
+      clearTimeout(timeout);
+      speechWorks = false;
+      console.log('Web Speech error -> fallback to Audio');
+      resetBtn(btn);
+      speakAudio(btn, text);
+    };
+    speechSynthesis.cancel();
+    setTimeout(function() { speechSynthesis.speak(u); }, 50);
+  }
+
+  // 方案2+3: Audio 标签播放在线音频
+  function speakAudio(btn, text) {
+    currentBtn = btn;
+    btn.innerHTML = '⏳ 播放中...';
+    btn.classList.add('speaking');
+
+    // 构造发音音频URL列表（逐个尝试）
+    var sources = [
+      'https://translate.google.com/translate_tts?ie=UTF-8&q=' + encodeURIComponent(text) + '&tl=en&client=tw-ob',
+      'https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=1'
+    ];
+    trySource(btn, sources, 0);
+  }
+
+  function trySource(btn, sources, idx) {
+    if (idx >= sources.length) {
+      resetBtn(btn);
+      // 最后方案：打开有道词典页面让用户手动点播放
+      var w = window.open('https://m.youdao.com/dict?le=eng&q=' + encodeURIComponent(sources[0].split('audio=')[1] || 'hello'), '_blank');
+      if (!w) { btn.innerHTML = '⚠️ 请允许弹窗'; }
+      return;
+    }
+    var audio = new Audio();
+    audio.preload = 'auto';
+    audio.src = sources[idx];
+    currentAudio = audio;
+    audio.oncanplaythrough = function() {
+      audio.play().catch(function() {
+        console.log('Play blocked for source ' + idx);
+        trySource(btn, sources, idx + 1);
+      });
+    };
+    audio.onended = function() { resetBtn(btn); currentAudio = null; };
+    audio.onerror = function() {
+      console.log('Audio error for source ' + idx);
+      trySource(btn, sources, idx + 1);
+    };
+    // 超时保护
+    setTimeout(function() {
+      if (currentAudio === audio && audio.readyState < 2) {
+        audio.pause();
+        console.log('Audio timeout for source ' + idx);
+        trySource(btn, sources, idx + 1);
+      }
+    }, 5000);
   }
 
   // ——— 折叠/展开 ———
