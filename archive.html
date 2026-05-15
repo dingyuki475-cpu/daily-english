@@ -741,24 +741,10 @@
     if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('open'); }
   }
 
-  // ——— 朗读功能：三种方案自动降级 ———
+  // ——— 朗读：拆分短句 + 有道逐段播放，兼容所有手机 ———
+  var audioQueue = [];
   var currentAudio = null;
   var currentBtn = null;
-  var cachedVoices = [];
-  var speechWorks = null;
-
-  function loadVoices() {
-    if (!('speechSynthesis' in window)) return;
-    var voices = speechSynthesis.getVoices();
-    if (voices.length > 0) { cachedVoices = voices; return; }
-    setTimeout(loadVoices, 100);
-  }
-  if ('speechSynthesis' in window) {
-    loadVoices();
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-      speechSynthesis.onvoiceschanged = function() { cachedVoices = speechSynthesis.getVoices(); };
-    }
-  }
 
   function speak(btn, text) {
     if (currentBtn === btn) { stopAll(); return; }
@@ -766,76 +752,35 @@
     btn.innerHTML = '⏳ 播放中...';
     btn.classList.add('speaking');
     currentBtn = btn;
-    if (speechWorks === true) { speakBrowser(btn, text); }
-    else if (speechWorks === false) { speakAudio(btn, text); }
-    else if ('speechSynthesis' in window) { speakBrowser(btn, text); }
-    else { speechWorks = false; speakAudio(btn, text); }
+    var parts = text.match(/[^,.!?;:]+[,.!?;:]?/g) || [text];
+    audioQueue = parts.map(function(p) { return p.trim(); }).filter(function(p) { return p.length > 0; });
+    playNext();
+  }
+
+  function playNext() {
+    if (audioQueue.length === 0) { stopAll(); return; }
+    var text = audioQueue.shift();
+    var audio = new Audio();
+    audio.preload = 'auto';
+    audio.src = 'https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=1';
+    currentAudio = audio;
+    audio.onended = function() { setTimeout(playNext, 350); };
+    audio.onerror = function() {
+      var a2 = new Audio();
+      a2.preload = 'auto';
+      a2.src = 'https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=2';
+      currentAudio = a2;
+      a2.onended = function() { setTimeout(playNext, 350); };
+      a2.onerror = function() { setTimeout(playNext, 100); };
+      a2.play().catch(function() { setTimeout(playNext, 100); });
+    };
+    audio.play().catch(function() { setTimeout(playNext, 100); });
   }
 
   function stopAll() {
+    audioQueue = [];
     if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; currentAudio = null; }
     if (currentBtn) { currentBtn.innerHTML = '🔊 朗读'; currentBtn.classList.remove('speaking'); currentBtn = null; }
-    if ('speechSynthesis' in window) speechSynthesis.cancel();
-  }
-  function resetBtn(btn) {
-    if (btn) { btn.innerHTML = '🔊 朗读'; btn.classList.remove('speaking'); }
-    if (currentBtn === btn) currentBtn = null;
-  }
-
-  function speakBrowser(btn, text) {
-    var u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US'; u.rate = 0.85; u.pitch = 1;
-    var voices = cachedVoices.length ? cachedVoices : speechSynthesis.getVoices();
-    var v = voices.find(function(x){return x.lang.startsWith('en') && x.name.toLowerCase().includes('female');})
-            || voices.find(function(x){return x.lang === 'en-US';})
-            || voices.find(function(x){return x.lang.startsWith('en');});
-    if (v) u.voice = v;
-    var timeout = setTimeout(function() {
-      speechSynthesis.cancel(); speechWorks = false;
-      speakAudio(btn, text);
-    }, 3000);
-    u.onstart = function() { clearTimeout(timeout); speechWorks = true; };
-    u.onend = function() { clearTimeout(timeout); resetBtn(btn); };
-    u.onerror = function() {
-      clearTimeout(timeout); speechWorks = false;
-      resetBtn(btn); speakAudio(btn, text);
-    };
-    speechSynthesis.cancel();
-    setTimeout(function() { speechSynthesis.speak(u); }, 50);
-  }
-
-  function speakAudio(btn, text) {
-    currentBtn = btn;
-    btn.innerHTML = '⏳ 播放中...';
-    btn.classList.add('speaking');
-    var sources = [
-      'https://translate.google.com/translate_tts?ie=UTF-8&q=' + encodeURIComponent(text) + '&tl=en&client=tw-ob',
-      'https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=1'
-    ];
-    trySource(btn, sources, 0);
-  }
-
-  function trySource(btn, sources, idx) {
-    if (idx >= sources.length) {
-      resetBtn(btn);
-      var w = window.open('https://m.youdao.com/dict?le=eng&q=' + encodeURIComponent('hello'), '_blank');
-      if (!w) { btn.innerHTML = '⚠️ 允许弹窗'; }
-      return;
-    }
-    var audio = new Audio();
-    audio.preload = 'auto';
-    audio.src = sources[idx];
-    currentAudio = audio;
-    audio.oncanplaythrough = function() {
-      audio.play().catch(function() { trySource(btn, sources, idx + 1); });
-    };
-    audio.onended = function() { resetBtn(btn); currentAudio = null; };
-    audio.onerror = function() { trySource(btn, sources, idx + 1); };
-    setTimeout(function() {
-      if (currentAudio === audio && audio.readyState < 2) {
-        audio.pause(); trySource(btn, sources, idx + 1);
-      }
-    }, 5000);
   }
 </script>
 </body>
